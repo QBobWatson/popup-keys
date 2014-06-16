@@ -4,7 +4,6 @@
 
 ;; Author: Joseph Rabinoff <rabinoff@post.harvard.edu>
 ;; Maintainer: Joseph Rabinoff <rabinoff@post.harvard.edu>
-;; Version: 0.9
 ;; Keywords: convenience, tools
 ;; URL: http://github.com/QBobWatson/popup-keys
 
