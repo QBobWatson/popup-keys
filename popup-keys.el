@@ -32,8 +32,6 @@
 
 ;;; Code:
 
-(require 'my-globals)
-
 (eval-when-compile
   (require 'cl))
 
