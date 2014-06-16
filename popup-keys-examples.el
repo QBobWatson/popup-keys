@@ -22,19 +22,23 @@
 
 ;;; Commentary:
 
-;; Example configurations for popup-keys popups.  This file by no means meant to
-;; contain a comprehensive list of applications of popup-keys.  Presumably you
-;; will want to configure your own.  Contributions of popups of a generally
+;; Example configurations for popup-keys popups.  This file is by no means meant
+;; to contain a comprehensive list of applications of popup-keys.  Presumably
+;; you will want to configure your own.  Contributions of popups of a generally
 ;; useful or illustrative nature are welcome.
 
 ;; To use one or more of the popups in this file, put it and popup-keys.el
-;; somewhere Emacs can find it, require it using
+;; somewhere Emacs can find it and require it using
 ;;
 ;;     (require 'popup-keys-examples)
 ;;
-;; and optionally bind the popup command to a keybinding.  If the popup is named
-;; `vc', for example, then the command will be called `popup-keys:run-vc'.  This
-;; file should take negligible time to load as all initialization is done
+;; Explicitly requiring the file may not be necessary if your package system
+;; extracted the autoloads correctly.  You will probably want to bind the popups
+;; you want to use to keys.  If the popup is named `vc', for example, then the
+;; command to bind will be called `popup-keys:run-vc'.  See below for Lisp code
+;; to make the suggested keybindings.
+
+;; This file should take negligible time to load as all initialization is done
 ;; lazily; loading this file simply stores some lists in a hash table and
 ;; defines some auxiliary functions and variables.  Requiring this file does
 ;; *not* have any other side-effects.  In particular, it doesn't install any
@@ -66,6 +70,7 @@
 
 ;; (global-set-key (kbd "C-x M-/") 'popup-keys:run-findtool)
 
+;;;###autoload (autoload 'popup-keys:run-findtool "popup-keys-examples" "Popup named findtool" t)
 (popup-keys:new
  'findtool
  :buf-name "*find tools*"
@@ -89,6 +94,7 @@
 
 ;; (global-set-key (kbd "C-x D") 'popup-keys:run-debug-commands)
 
+;;;###autoload (autoload 'popup-keys:run-debug-commands "popup-keys-examples" "Popup named debug-commands" t)
 (popup-keys:new
  'debug-commands
  :header #'(lambda (popup)
@@ -135,6 +141,7 @@
 ;;      ))
 ;; (global-set-key (kbd "C-x v") 'popup-keys:run-vc)
 
+;;;###autoload (autoload 'popup-keys:run-vc "popup-keys-examples" "Popup named vc" t)
 (popup-keys:new
  'vc
  :buf-name "*VC keys*"
@@ -223,6 +230,7 @@
 ;; (setq projectile-keymap-prefix (kbd "C-c P"))
 ;; (global-set-key (kbd "C-c p") 'popup-keys:run-projectile)
 
+;;;###autoload (autoload 'popup-keys:run-projectile "popup-keys-examples" "Popup named projectile" t)
 (popup-keys:new
  'projectile
  :buf-name "*Projectile dispatcher*"
@@ -351,6 +359,7 @@ When ARG is :projectdir, translate VAL into a project root."
 ;; (global-set-key (kbd "C-x C-k")   'popup-keys:run-kmacro)
 ;; (global-set-key (kbd "C-x C-S-k") 'kmacro-keymap)
 
+;;;###autoload (autoload 'popup-keys:run-kmacro "popup-keys-examples" "Popup named kmacro" t)
 (popup-keys:new
  'kmacro
  :buf-name "*kmacro keys*"
@@ -506,6 +515,7 @@ binding in the `popup-keys:run-kmacro' menu."
 ;; (eval-after-load "undo-tree"
 ;;   '(define-key undo-tree-map (kbd "C-x r") nil))
 
+;;;###autoload (autoload 'popup-keys:run-registers "popup-keys-examples" "Popup named registers" t)
 (popup-keys:new
  'registers
  :header 'popups:register-header
@@ -669,6 +679,7 @@ binding in the `popup-keys:run-kmacro' menu."
 ;;             (define-key dired-mode-map (kbd "*") 'popup-keys:run-dired-mark)))
 
 ;; ** general
+;;;###autoload (autoload 'popup-keys:run-dired "popup-keys-examples" "Popup named dired" t)
 (popup-keys:new
  'dired
  :more-help (popup-keys:info-node "(emacs) Dired")
@@ -768,6 +779,7 @@ binding in the `popup-keys:run-kmacro' menu."
             ))
 
 ;; ** regexp operations
+;;;###autoload (autoload 'popup-keys:run-dired-regexp "popup-keys-examples" "Popup named dired-regexp" t)
 (popup-keys:new
  'dired-regexp
  :more-help (popup-keys:info-node "(emacs) Transforming File Names")
@@ -789,6 +801,7 @@ binding in the `popup-keys:run-kmacro' menu."
             ))
 
 ;; ** mark operations
+;;;###autoload (autoload 'popup-keys:run-dired-mark "popup-keys-examples" "Popup named dired-mark" t)
 (popup-keys:new
  'dired-mark
  :header #'(lambda (popup)
@@ -871,6 +884,7 @@ binding in the `popup-keys:run-kmacro' menu."
 (declare-function "ibuffer" ibuffer-unmark-all)
 
 ;; ** general
+;;;###autoload (autoload 'popup-keys:run-ibuffer "popup-keys-examples" "Popup named ibuffer" t)
 (popup-keys:new
  'ibuffer
  :more-help 'describe-mode
@@ -977,6 +991,7 @@ binding in the `popup-keys:run-kmacro' menu."
             ))
 
 ;; ** mark operations
+;;;###autoload (autoload 'popup-keys:run-ibuffer-mark "popup-keys-examples" "Popup named ibuffer-mark" t)
 (popup-keys:new
  'ibuffer-mark
  :header #'(lambda (popup)
@@ -1034,6 +1049,7 @@ binding in the `popup-keys:run-kmacro' menu."
 ;; ** filter operations
 (declare-function ibuffer-format-qualifier "ibuf-ext")
 
+;;;###autoload (autoload 'popup-keys:run-ibuffer-filter "popup-keys-examples" "Popup named ibuffer-filter" t)
 (popup-keys:new
  'ibuffer-filter
  :header #'(lambda (popup)
@@ -1097,6 +1113,7 @@ binding in the `popup-keys:run-kmacro' menu."
 ;; (eval-after-load "undo-tree"
 ;;   '(define-key undo-tree-visualizer-mode-map (kbd "?") 'popup-keys:run-undo-tree))
 
+;;;###autoload (autoload 'popup-keys:run-undo-tree "popup-keys-examples" "Popup named undo-tree" t)
 (popup-keys:new
  'undo-tree
  :actions '(("C-q" "abort"             undo-tree-visualizer-abort)
@@ -1143,6 +1160,7 @@ binding in the `popup-keys:run-kmacro' menu."
 ;;             (defvar org-mode-map)
 ;;             (define-key org-mode-map (kbd "M-S") 'popup-keys:run-org-speed)))
 
+;;;###autoload (autoload 'popup-keys:run-org-speed "popup-keys-examples" "Popup named org-speed" t)
 (popup-keys:new
  'org-speed
  :buf-name "*org speed*"

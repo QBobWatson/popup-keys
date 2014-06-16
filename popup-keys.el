@@ -1069,6 +1069,7 @@ window.  Suitable for the :more-help arg."
   "Return the name of the popup function generated from popup name NAME."
   (intern (concat "popup-keys:run-" (symbol-name name))))
 
+;;;###autoload
 (defun popup-keys:write-autoload (name)
   "Insert an autoload cookie for a popup named NAME at point."
   (interactive "SPopup name: ")
