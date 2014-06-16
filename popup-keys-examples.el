@@ -25,7 +25,8 @@
 
 ;; Example configurations for popup-keys popups.  This file by no means meant to
 ;; contain a comprehensive list of applications of popup-keys.  Presumably you
-;; will want to configure your own.  Contributions are welcome.
+;; will want to configure your own.  Contributions of popups of a generally
+;; useful or illustrative nature are welcome.
 
 ;; To use one or more of the popups in this file, put it and popup-keys.el
 ;; somewhere Emacs can find it, require it using
@@ -38,7 +39,8 @@
 ;; lazily; loading this file simply stores some lists in a hash table and
 ;; defines some auxiliary functions.  Requiring this file does *not* have any
 ;; other side-effects; see the comments with the examples for example
-;; keybindings.
+;; keybindings.  Popups in this file are optimized for 100-character wide
+;; windows.
 
 ;; Please see the README.org file at http://github.com/QBobWatson/popup-keys
 ;; for detailed usage information.
@@ -509,7 +511,7 @@ binding in the `popup-keys:run-kmacro' menu."
  :header 'popups:register-header
  :more-help (popup-keys:info-node "(emacs) Registers")
  :actions `(("DEL" "delete register"   popups:delete-register :keepbuf args)
-            ("SPC" "point to reg"        point-to-register :keepbuf args)
+            ("SPC" "point to reg"      point-to-register :keepbuf args)
             ;; alternate keybindings (invisible)
             ("C-@" nil                 point-to-register :keepbuf args)
             ("C-SPC" nil               point-to-register :keepbuf args)
@@ -546,11 +548,9 @@ binding in the `popup-keys:run-kmacro' menu."
             ("b" "jump to bookmark"    bookmark-jump)
             ("D" "delete bookmark"     bookmark-delete)
             ("l" "bookmark list"       bookmark-bmenu-list)
-            ("L" "helm bookmarks"      helm-filtered-bookmarks)
 
             ("u" "undo state to reg"   undo-tree-save-state-to-register :keepbuf args)
             ("U" "restore undo state"  undo-tree-restore-state-from-register :keepbuf args)
-            ("h" "helm registers"      helm-register)
             ("M-h" nil                 helm-register)
             ))
 
@@ -719,14 +719,15 @@ binding in the `popup-keys:run-kmacro' menu."
             ("s" "toggle sort (C-u)"   dired-sort-toggle-or-edit :keepbuf t)
             ("w" "copy filename"       dired-copy-filename-as-kill :keepbuf t)
             ("y" "show file type"      dired-show-file-type :keepbuf t)
-            ("Y" "show file size"      popups:dired-get-size :keepbuf t)
             ("=" "diff"                dired-diff)
             ("C-x C-q" "toggle wdired" dired-toggle-read-only)
+            ("V" "run mail"            dired-do-run-mail)
             ;; marking
             ("m" "mark one"            dired-mark :keepbuf t)
             ("u" "unmark one"          dired-unmark :keepbuf t)
             ("DEL" "unmark backward"   dired-unmark-backward :keepbuf t)
             ("U" "unmark all"          dired-unmark-all-marks :keepbuf t)
+            ("C-M-?" "unmark all"      dired-unmark-all-files :keepbuf t)
             ("M-(" "mark sexp"         dired-mark-sexp :keepbuf t)
             ("t" "toggle marked"       dired-toggle-marks :keepbuf t)
             ("A" "search marked"       dired-do-search :keepbuf t)
@@ -779,6 +780,7 @@ binding in the `popup-keys:run-kmacro' menu."
             ("C" "copy by regexp"      dired-do-copy-regexp)
             ("H" "hardlink by regexp"  dired-do-hardlink-regexp)
             ("R" "rename by regexp"    dired-do-rename-regexp)
+            ("r" nil                   dired-do-rename-regexp)
             ("S" "symlink by regexp"   dired-do-symlink-regexp)
             ("Y" "rel-symlink regexp"  dired-do-relsymlink-regexp)
 
@@ -824,7 +826,7 @@ binding in the `popup-keys:run-kmacro' menu."
             ("u" "unmark one"          dired-unmark :keepbuf t)
             ("DEL" "unmark backward"   dired-unmark-backward :keepbuf t)
             ("!" "unmark all marks"    dired-unmark-all-marks :keepbuf t)
-            ("U" "unmark all files"    dired-unmark-all-files :keepbuf t)
+            ("U" nil                   dired-unmark-all-marks :keepbuf t)
 
             ("d" "flag for deletion"   dired-flag-file-deletion :keepbuf t)
             ("~" "flag backup files"   dired-flag-backup-files :keepbuf t )
@@ -840,19 +842,6 @@ binding in the `popup-keys:run-kmacro' menu."
             ))
 
 ;; ** functions
-
-(defun popups:dired-get-size ()
-  "Show the size of selected files in dired."
-  (interactive)
-  (require 'dired)
-  (declare-function dired-get-marked-files "dired")
-  (let ((files (dired-get-marked-files)))
-    (with-temp-buffer
-      (apply 'call-process "/usr/bin/du" nil t nil "-sch" files)
-      (message "Size of all marked files: %s"
-               (progn
-                 (re-search-backward "^[\s]*\\([0-9.,]+[A-Za-z]+\\).*total$")
-                 (match-string 1))))))
 
 (defun popups:dired-count-marks ()
   "Count the number of marked files."
@@ -885,7 +874,18 @@ binding in the `popup-keys:run-kmacro' menu."
 (popup-keys:new
  'ibuffer
  :more-help 'describe-mode
- :actions `(;; navigation
+ :actions `(;; digit arguments
+            ("0" nil digit-argument :keepbuf t)
+            ("1" nil digit-argument :keepbuf t)
+            ("2" nil digit-argument :keepbuf t)
+            ("3" nil digit-argument :keepbuf t)
+            ("4" nil digit-argument :keepbuf t)
+            ("5" nil digit-argument :keepbuf t)
+            ("6" nil digit-argument :keepbuf t)
+            ("7" nil digit-argument :keepbuf t)
+            ("8" nil digit-argument :keepbuf t)
+            ("9" nil digit-argument :keepbuf t)
+            ;; navigation
             ("n" "next line"           ibuffer-forward-line :keepbuf t)
             ;; alternate keybindings (invisible)
             ("SPC" nil                 ibuffer-forward-line :keepbuf t)
@@ -917,7 +917,6 @@ binding in the `popup-keys:run-kmacro' menu."
             ("C-y" "yank group"        ibuffer-yank :keepbuf t)
             ("/" "filter popup"        popup-keys:run-ibuffer-filter)
             ;; misc
-            ("k" "visually delete"     ibuffer-do-kill-lines :keepbuf t)
             ("g" "reload buffer"       ibuffer-update :keepbuf t)
             ("l" "redisplay"           ibuffer-redisplay :keepbuf t)
             ("`" "switch display"      ibuffer-switch-format :keepbuf t)
@@ -940,7 +939,6 @@ binding in the `popup-keys:run-kmacro' menu."
             ("m" "mark one"            ibuffer-mark-forward :keepbuf t)
             ("u" "unmark one"          ibuffer-unmark-forward :keepbuf t)
             ("DEL" "unmark backward"   ibuffer-unmark-backward :keepbuf t)
-            ("U" "unmark all"          ibuffer-unmark-all :keepbuf t)
             ("M-DEL" nil               ibuffer-unmark-all :keepbuf t)
             ("t" "toggle marked"       ibuffer-toggle-marks :keepbuf t)
             ("." "mark old"            ibuffer-mark-old-buffers :keepbuf t)
@@ -951,6 +949,7 @@ binding in the `popup-keys:run-kmacro' menu."
             ;; flagging
             ("x" "kill flagged"        ibuffer-do-kill-on-deletion-marks :keepbuf t)
             ("d" "flag for deletion"   ibuffer-mark-for-delete :keepbuf t)
+            ("k" nil                   ibuffer-mark-for-delete :keepbuf t)
             ("C-d" "... backwards"     ibuffer-mark-for-delete-backwards :keepbuf t)
             ;; buffer operations on marked
             ("~" "toggle modified"     ibuffer-do-toggle-modified :keepbuf t)
@@ -964,7 +963,7 @@ binding in the `popup-keys:run-kmacro' menu."
             ("I" "... regexp"          ibuffer-do-query-replace-regexp)
             ("M-f" "multi isearch"     ibuffer-do-isearch)
             ("C-M-f" "... regexp"      ibuffer-do-isearch-regexp)
-            ("M-I" "replace regexp"    ibuffer-do-replace-regexp)
+            ("U" "replace regexp"    ibuffer-do-replace-regexp)
             ("R" "rename uniquely"     ibuffer-do-rename-uniquely :keepbuf t)
             ("S" "save marked"         ibuffer-do-save :keepbuf t)
             ("T" "toggle read-only"    ibuffer-do-toggle-read-only :keepbuf t)
@@ -1007,13 +1006,12 @@ binding in the `popup-keys:run-kmacro' menu."
             ("M-}" "next marked"       ibuffer-forward-next-marked :keepbuf t)
             ("M-{" "previous marked"   ibuffer-backwards-next-marked :keepbuf t)
 
-            ("m" "mark one"            ibuffer-mark-forward :keepbuf t)
             ("M" "mark by mode"        ibuffer-mark-by-mode :keepbuf t)
-            ("~" "mark modified"       ibuffer-mark-modified-buffers :keepbuf t)
-            ("*" "mark unsaved"        ibuffer-mark-unsaved-buffers :keepbuf t)
+            ("m" "mark modified"       ibuffer-mark-modified-buffers :keepbuf t)
+            ("u" "mark unsaved"        ibuffer-mark-unsaved-buffers :keepbuf t)
             ("s" "mark *special*"      ibuffer-mark-special-buffers :keepbuf t)
             ("r" "mark read-only"      ibuffer-mark-read-only-buffers :keepbuf t)
-            ("D" "mark dired"          ibuffer-mark-dired-buffers :keepbuf t)
+            ("/" "mark dired"          ibuffer-mark-dired-buffers :keepbuf t)
             ("e" "mark no file"        ibuffer-mark-dissociated-buffers :keepbuf t)
             ("h" "mark help buffers"   ibuffer-mark-help-buffers :keepbuf t)
             ("z" "mark compressed"     ibuffer-mark-compressed-file-buffers :keepbuf t)
@@ -1022,9 +1020,8 @@ binding in the `popup-keys:run-kmacro' menu."
             ("% m" "mark mode regexp"  ibuffer-mark-by-mode-regexp :keepbuf t)
             ("% f" "mark file regxp"   ibuffer-mark-by-file-name-regexp :keepbuf t)
 
-            ("u" "unmark one"          ibuffer-unmark-forward :keepbuf t)
             ("DEL" "unmark backward"   ibuffer-unmark-backward :keepbuf t)
-            ("U" "unmark all"          ibuffer-unmark-all :keepbuf t)
+            ("*" "unmark all"          ibuffer-unmark-all :keepbuf t)
             ("!" nil                   ibuffer-unmark-all :keepbuf t)
 
             ("d" "flag for deletion"   ibuffer-mark-for-delete :keepbuf t)
@@ -1032,7 +1029,6 @@ binding in the `popup-keys:run-kmacro' menu."
             ("x" "kill flagged"        ibuffer-do-kill-on-deletion-marks :keepbuf t)
 
             ("t" "toggle marked"       ibuffer-toggle-marks :keepbuf t)
-            ("/" "filter popup"        popup-keys:run-ibuffer-filter)
             ))
 
 ;; ** filter operations
@@ -1132,13 +1128,13 @@ binding in the `popup-keys:run-kmacro' menu."
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; * Org
+;; * Org speed
 
 ;; This popup is a reimplementation of org-mode's speed keybindings.  Using
-;; popup keys has the advantage that the keys can be run from anywhere (and not
-;; just on a heading line), and we doesn't have to rebind `self-insert-command'
-;; to make it happen.  The speed comes from the fact that most actions do not
-;; close the popup buffer window.
+;; popup keys has the advantage that the keys can be run from anywhere (not just
+;; on a heading line), and we don't have to rebind `self-insert-command' to make
+;; it happen.  The speed comes from the fact that most actions do not close the
+;; popup buffer window.
 
 ;; Suggested keybinding:
 
@@ -1152,28 +1148,27 @@ binding in the `popup-keys:run-kmacro' menu."
  :buf-name "*org speed*"
  :actions '(;; navigation
             ("n" "next heading"   (org-speed-move-safe 'outline-next-visible-heading)
-             :keepbuf t)
+             :keepbuf t :help (describe-function 'outline-next-visible-heading))
             ("p" "prev heading"   (org-speed-move-safe 'outline-previous-visible-heading)
-             :keepbuf t)
+             :keepbuf t :help (describe-function 'outline-previous-visible-heading))
             ("f" "forward hdg"    (org-speed-move-safe 'org-forward-heading-same-level)
-             :keepbuf t)
+             :keepbuf t :help (describe-function 'org-forward-heading-same-level))
             ("b" "back heading"   (org-speed-move-safe 'org-backward-heading-same-level)
-             :keepbuf t)
+             :keepbuf t :help (describe-function 'org-backward-heading-same-level))
             ("u" "up heading"     (org-speed-move-safe 'outline-up-heading)
-             :keepbuf t)
+             :keepbuf t :help (describe-function 'outline-up-heading))
             ("F" "next block"     org-next-block :keepbuf t)
             ("B" "prev block"     org-previous-block :keepbuf t)
             ("M-}" "next element" org-forward-element :keepbuf t)
             ("M-{" "prev element" org-backward-element :keepbuf t)
             ("j" "goto"           org-goto)
-            ("g" "wide goto"      (org-refile t))
+            ("g" "wide goto"      (org-refile t)
+              :help (describe-function 'org-refile))
             ;; visibility
             ("c" "cycle"          org-cycle :keepbuf t)
             ("C" "cycle global"   org-shifttab :keepbuf t)
             ("SPC" "echo path"    org-display-outline-path :keepbuf t)
             ("s" "narrow"         org-narrow-to-subtree :keepbuf t)
-            ("W" "widen"          widen :keepbuf t)
-            ("I" "indirect"       org-tree-to-indirect-buffer)
             ("=" "columns"        org-columns)
             ;; structure edit
             ("C-c" "update"       org-ctrl-c-ctrl-c :keepbuf t)
@@ -1189,7 +1184,8 @@ binding in the `popup-keys:run-kmacro' menu."
             ("*" "make header"    org-ctrl-c-minus :keepbuf t)
             ("i" "new heading"
              (progn (forward-char 1) (call-interactively
-                                      'org-insert-heading-respect-content)))
+                                      'org-insert-heading-respect-content))
+             :help (describe-function 'org-insert-heading-respect-content))
             ("C-w" "kill subtree" org-cut-special :keepbuf t)
             ("M-w" "copy subtree" org-copy-special :keepbuf t)
             ("C-y" "yank subtree" org-paste-special :keepbuf t)
@@ -1201,23 +1197,39 @@ binding in the `popup-keys:run-kmacro' menu."
             ("@" "mark"           org-mark-subtree)
             (";" "comment"        org-toggle-comment :keepbuf t)
             ("#" nil              org-toggle-comment :keepbuf t)
+            ;; clocking
+            ("I" "clock in"       org-clock-in :keepbuf t)
+            ("O" "clock out"      org-clock-out :keepbuf t)
+            ("W" "warning"
+             (lambda(m) (interactive "sMinutes before warning: ")
+               (org-entry-put (point) "APPT_WARNTIME" m))
+             :help "Set APPT_WARNTIME property"
+             :keepbuf t)
             ;; timestamps
             ("C-d" "deadline"     org-deadline :keepbuf t)
             ("C-s" "scheduled"    org-schedule :keepbuf t)
             ;; metadata edit
             ("t" "todo"           org-todo :keepbuf t)
             ("," "set priority"   org-priority :keepbuf t)
-            ("0" "clear priority" (org-priority ?\ ) :keepbuf t)
-            ("1" "priority A"     (org-priority ?A) :keepbuf t)
-            ("2" "priority B"     (org-priority ?B) :keepbuf t)
-            ("3" "priority C"     (org-priority ?C) :keepbuf t)
+            ("0" "clear priority" (org-priority ?\ ) :keepbuf t
+             :help (describe-function 'org-priority))
+            ("1" "priority A"     (org-priority ?A) :keepbuf t
+             :help (describe-function 'org-priority))
+            ("2" "priority B"     (org-priority ?B) :keepbuf t
+             :help (describe-function 'org-priority))
+            ("3" "priority C"     (org-priority ?C) :keepbuf t
+             :help (describe-function 'org-priority))
             (":" "set tags"       org-set-tags-command :keepbuf t)
             ("e" "set effort"     org-set-effort :keepbuf t)
             ("E" "inc effort"     org-inc-effort :keepbuf t)
             ;; misc
+            ("v" "agenda"         org-agenda)
             ("/" "sparse tree"    org-sparse-tree)
-            ("<" "restr lock"     (org-agenda-set-restriction-lock 'subtree))
-            (">" "clear lock"     org-agenda-remove-restriction-lock)
+            ("o" "open at point"  org-open-at-point)
+            ("<" "restr lock"     (org-agenda-set-restriction-lock 'subtree)
+             :help (describe-function 'org-agenda-set-restriction-lock))
+            (">" "clear lock"     (org-agenda-remove-restriction-lock)
+             :help (describe-function 'org-agenda-remove-restriction-lock))
             ))
 
 (provide 'popup-keys-examples)
