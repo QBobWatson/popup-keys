@@ -1070,6 +1070,17 @@ window.  Suitable for the :more-help arg."
   "Return the name of the popup function generated from popup name NAME."
   (intern (concat "popup-keys:run-" (symbol-name name))))
 
+(defun popup-keys:write-autoload (name)
+  "Insert an autoload cookie for a popup named NAME at point."
+  (interactive "SPopup name: ")
+  (let ((fname (buffer-file-name)))
+    (unless fname
+      (user-error "This command only works from a buffer with a file."))
+    (setq fname (file-name-base fname))
+    (insert
+     (format
+      ";;;###autoload (autoload '%S \"%s\" \"Popup named %S\" t)\n"
+      (popup-keys:popup-name-from-group-name name) fname name))))
 
 ;; Local Variables:
 ;;   checkdoc-arguments-in-order-flag: nil
