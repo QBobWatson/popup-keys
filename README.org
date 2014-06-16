@@ -1,0 +1,8 @@
+
++ isearch for keys
++ repeat keys
++ easy to get action and general help
++ display what you're doing in one-key modes like dired, ibuffer
++ speed keys for navigation like in org mode (don't rebind self-insert-command!)
++ use cases: useful popups
++ screenshot
