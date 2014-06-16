@@ -37,20 +37,21 @@
 ;; `vc', for example, then the command will be called `popup-keys:run-vc'.  This
 ;; file should take negligible time to load as all initialization is done
 ;; lazily; loading this file simply stores some lists in a hash table and
-;; defines some auxiliary functions.  Requiring this file does *not* have any
-;; other side-effects; see the comments with the examples for example
-;; keybindings.  Popups in this file are optimized for 100-character wide
-;; windows.
+;; defines some auxiliary functions and variables.  Requiring this file does
+;; *not* have any other side-effects.  In particular, it doesn't install any
+;; keybindings -- see the comments with the examples for example keybindings.
+;; Popups in this file are optimized for 100-character wide windows.
 
 ;; Please see the README.org file at http://github.com/QBobWatson/popup-keys
 ;; for detailed usage information.
 
-;; TODO:
-;;  * reset to stock keybindings
-
 ;;; Code:
 
 (require 'popup-keys)
+
+(eval-when-compile
+  (require 'ibuffer)
+  (require 'ibuf-ext))
 
 (defvar popups:header-max-len 70
   "Maximum length of strings in header lines.")
