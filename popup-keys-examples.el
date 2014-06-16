@@ -226,6 +226,7 @@
  :buf-name "*Projectile dispatcher*"
  :actions '(("h" "helm-projectile"     helm-projectile)
             ("f" "find file"           projectile-find-file)
+            ("F" "find file in projs"  projectile-find-file-in-known-projects)
             ("4f" "... in other win"   projectile-find-file-other-window)
             ("e" "recent files"        projectile-recentf)
             ;; alternate keybinding (invisible)
@@ -237,12 +238,14 @@
 
             ("b" "switch buffer"       projectile-switch-to-buffer)
             ("4b" "... in other win"   projectile-switch-to-buffer-other-window)
+            ("I" "ibuffer"             projectile-ibuffer)
             ("B" "most recent buffer"  projectile-project-buffers-other-buffer)
             ("4 C-o" "open other win"  projectile-display-buffer)
             ("k" "kill proj bufs"      projectile-kill-buffers)
             ("S" "save proj bufs"      projectile-save-project-buffers)
 
             ("a" "ack"                 projectile-ack)
+            ("A" "ag"                  projectile-ag)
             ("g" "grep"                projectile-grep)
             ;; alternate keybinding (invisible)
             ("M-g" nil                 projectile-grep)
@@ -256,6 +259,7 @@
             ("c" "compile project"     projectile-compile-project)
             ("p" "test project"        projectile-test-project)
             ("t" "toggle testing"      projectile-toggle-between-implementation-and-test)
+            ("4t" "find test o/win"    projectile-find-implementation-or-test-other-window)
             ("T" "find test file"      projectile-find-test-file)
 
             ("!" "shell cmd in root"   projectile-run-shell-command-in-root)
@@ -334,7 +338,7 @@ When ARG is :projectdir, translate VAL into a project root."
 ;; + It mangles the keyboard input so that you can open the popup buffer while
 ;;   defining a keyboard macro.  For example, to insert the current value of the
 ;;   keyboard macro counter, open the popup and hit "c"; the counter is
-;;   inserted, and the key sequence "C-x C-S-K c" is recorded in the current
+;;   inserted, and the key sequence "C-x C-S-K TAB" is recorded in the current
 ;;   keyboard macro definition.  This also works well with prefix arguments, for
 ;;   use e.g. with `kmacro-set-counter'.
 
@@ -406,6 +410,7 @@ When ARG is :projectdir, translate VAL into a project root."
             ;; here.  Don't try to do anything other than this from this popup
             ;; while defining a macro, other than ending the macro!  (Using
             ;; other popups in macros should work fine.)
+            ;; don't rebind TAB here
             ("c" "insert counter"      kmacro-insert-counter
              :macro-keys "C-x C-S-K TAB")
             ("C-a" "add arg to ctr"    kmacro-add-counter
@@ -414,6 +419,7 @@ When ARG is :projectdir, translate VAL into a project root."
              :macro-keys "C-x C-S-K C-c")
             ("C-f" "set ctr format"    kmacro-set-format
              :macro-keys "C-x C-S-K C-f")
+            ;; don't rebind "q"
             ("M-q" "query user"        kbd-macro-query
              :macro-keys "C-x C-S-K q")
             ))
@@ -503,10 +509,9 @@ binding in the `popup-keys:run-kmacro' menu."
  :header 'popups:register-header
  :more-help (popup-keys:info-node "(emacs) Registers")
  :actions `(("DEL" "delete register"   popups:delete-register :keepbuf args)
-            ("/" "point to reg"        point-to-register :keepbuf args)
+            ("SPC" "point to reg"        point-to-register :keepbuf args)
             ;; alternate keybindings (invisible)
             ("C-@" nil                 point-to-register :keepbuf args)
-            ("SPC" nil                 point-to-register :keepbuf args)
             ("C-SPC" nil               point-to-register :keepbuf args)
             ("F" "file pos to reg"     popups:point-to-file-register :keepbuf args)
             ("M-f" "file name to reg"  popups:fname-to-file-register :keepbuf args)
