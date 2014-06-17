@@ -174,7 +174,8 @@ keymap, as opposed to a keymap bound to a prefix key as in the other use cases.
 Most commands do not close the popup window, so you can (if you want) operate as
 normal on the dired buffer with a keymap reference on the screen.  Perhaps more
 useful is =popup-keys:run-dired-mark=, which allows you to mark and unmark files
-with a command reference and a mark count always visible.
+with a command reference and a mark count always visible, without having to type
+the =*= prefix every time.
 
 [[./img/dired-mark.jpg]]
 
