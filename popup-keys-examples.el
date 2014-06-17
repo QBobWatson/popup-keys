@@ -34,19 +34,20 @@
 ;;
 ;; Explicitly requiring the file may not be necessary if your package system
 ;; extracted the autoloads correctly.  You will probably want to bind the popups
-;; you want to use to keys.  If the popup is named `vc', for example, then the
-;; command to bind will be called `popup-keys:run-vc'.  See below for Lisp code
-;; to make the suggested keybindings.
+;; you want to use to keys.  See below for Lisp code to make the suggested
+;; keybindings.
 
 ;; This file should take negligible time to load as all initialization is done
 ;; lazily; loading this file simply stores some lists in a hash table and
 ;; defines some auxiliary functions and variables.  Requiring this file does
 ;; *not* have any other side-effects.  In particular, it doesn't install any
 ;; keybindings -- see the comments with the examples for example keybindings.
+
 ;; Popups in this file are optimized for 100-character wide windows.
 
 ;; Please see the README.org file at http://github.com/QBobWatson/popup-keys
-;; for detailed usage information.
+;; for detailed usage information.  See the comments and documentation strings
+;; in popup-keys.el for general library documentation.
 
 ;;; Code:
 
@@ -56,14 +57,14 @@
   (require 'ibuffer)
   (require 'ibuf-ext))
 
-(defvar popups:header-max-len 70
+(defvar popup-keys:header-max-len 70
   "Maximum length of strings in header lines.")
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; * Find
 
-;; Popup to dispatch to various advanced file finding tools.  This is just an
+;; Popup to run various advanced file finding tools.  This is just an
 ;; interactive keymap, the simplest kind of popup.
 
 ;; You can bind this popup to a key using:
@@ -216,17 +217,21 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; * Projectile
 
-;; Popup for Projectile commands.  You can get projectile from
+;; Popup for Projectile commands.  You can get Projectile from
+;;
 ;;    http://github.com/bbatsov/projectile
-;; or from el-get or melpa.
+;;
+;; or from El-Get or MELPA.
 
 ;; This popup mainly serves as an interactive version of the Projectile keymap
 ;; (C-c p).  It also displays the current Projectile project directory, and
-;; allows you to change the directory before running any of the commands.
+;; allows you to change the directory before running any of the commands, using
+;; an argument.  The `popup-keys:projectile-set-defaultdir' hook below uses the
+;; value of the argument to set `default-directory' when running a Projectile
+;; command.
 
-;; Suggested keybindings:
+;; Suggested keybindings below.  Run these before requiring projectile.
 
-;; ;; Set this before requiring 'projectile.
 ;; (setq projectile-keymap-prefix (kbd "C-c P"))
 ;; (global-set-key (kbd "C-c p") 'popup-keys:run-projectile)
 
@@ -286,12 +291,12 @@
                :read (read-directory-name "New project directory: " curval)
                :help "Most Projectile commands will not work without a valid root directory"))
 
- :setup '(progn (require 'projectile) (popups:projectile-get-proot))
- :pre-action 'popups:projectile-set-defaultdir
- :post-arg 'popups:projectile-arg)
+ :setup '(progn (require 'projectile) (popup-keys:projectile-get-proot))
+ :pre-action 'popup-keys:projectile-set-defaultdir
+ :post-arg 'popup-keys:projectile-arg)
 
 ;; ** functions
-(defun popups:projectile-get-proot (&optional popup)
+(defun popup-keys:projectile-get-proot (&optional popup)
   "Set popup argument :projectdir to the project root of `default-directory'.
 POPUP is unused."
   (ignore popup)
@@ -303,7 +308,7 @@ POPUP is unused."
     (unless proot
       (message "Warning: %s is not in a project" default-directory))))
 
-(defun popups:projectile-set-defaultdir (key)
+(defun popup-keys:projectile-set-defaultdir (key)
   "Set `default-directory' from `popup-keys:action-args' when running an action.
 
 This function is run as a hook when an action is executed.  The return value of
@@ -316,13 +321,13 @@ is unused."
       ;; return arguments get let-bound
       `((default-directory ,arg)))))
 
-(defun popups:projectile-arg (arg val)
+(defun popup-keys:projectile-arg (arg val)
   "Hook function called when an argument is changed.
 
 When ARG is :projectdir, translate VAL into a project root."
   (when (eq arg :projectdir)
     (let ((default-directory val))
-      (popups:projectile-get-proot))))
+      (popup-keys:projectile-get-proot))))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -354,7 +359,7 @@ When ARG is :projectdir, translate VAL into a project root."
 
 ;; In order for this to work, you should use the following keybindings.  If you
 ;; change the second, you need to change the keybinding mangling options in the
-;; popup definitions and in `popups:kmacro-bind-to-key'.
+;; popup definitions and in `popup-keys:kmacro-bind-to-key'.
 
 ;; (global-set-key (kbd "C-x C-k")   'popup-keys:run-kmacro)
 ;; (global-set-key (kbd "C-x C-S-k") 'kmacro-keymap)
@@ -372,18 +377,18 @@ When ARG is :projectdir, translate VAL into a project root."
                           'face 'font-lock-keyword-face)
               (propertize "  last " 'face 'font-lock-function-name-face)
               (propertize (if last-kbd-macro
-                              (popups:truncate-string
+                              (popup-keys:truncate-string
                                (format-kbd-macro last-kbd-macro 1)
-                               popups:header-max-len
+                               popup-keys:header-max-len
                                "[...]")
                             "<none>")
                           'face 'font-lock-constant-face)
               "\n"
               (propertize "   2nd " 'face 'font-lock-function-name-face)
               (propertize (if kmacro-ring
-                              (popups:truncate-string
+                              (popup-keys:truncate-string
                                (format-kbd-macro (car (car kmacro-ring)) 1)
-                               popups:header-max-len
+                               popup-keys:header-max-len
                                "[...]")
                             "<none>")
                           'face 'font-lock-constant-face)
@@ -405,7 +410,7 @@ When ARG is :projectdir, translate VAL into a project root."
 
             ("C-e" "edit macro"        kmacro-edit-macro)
             ("SPC" "step-edit macro"   kmacro-step-edit-macro)
-            ("b" "bind macro"          popups:kmacro-bind-to-key :keepbuf t)
+            ("b" "bind macro"          popup-keys:kmacro-bind-to-key :keepbuf t)
             ("n" "name macro"          kmacro-name-last-macro :keepbuf args)
             ("e" "edit bound macro"    edit-kbd-macro)
             ("l" "macro from lossage"  kmacro-edit-lossage)
@@ -421,6 +426,7 @@ When ARG is :projectdir, translate VAL into a project root."
             ;; here.  Don't try to do anything other than this from this popup
             ;; while defining a macro, other than ending the macro!  (Using
             ;; other popups in macros should work fine.)
+
             ;; don't rebind TAB here
             ("c" "insert counter"      kmacro-insert-counter
              :macro-keys "C-x C-S-K TAB")
@@ -436,7 +442,7 @@ When ARG is :projectdir, translate VAL into a project root."
             ))
 
 ;; ** functions
-(defun popups:truncate-string (str len &optional ellipsis)
+(defun popup-keys:truncate-string (str len &optional ellipsis)
   "Truncate STR to LEN chars, inserting ELLIPSIS if necessary."
   (setq ellipsis (or ellipsis ""))
   (let* ((str-len  (length str))
@@ -449,7 +455,7 @@ When ARG is :projectdir, translate VAL into a project root."
              str 0 len)
             (if too-long ellipsis ""))))
 
-(defun popups:kmacro-bind-to-key ()
+(defun popup-keys:kmacro-bind-to-key ()
   "Modified version of `kmacro-bind-to-key'.
 
 Works the same, but entering a binding of 0 through 9 or A through Z places the
@@ -473,7 +479,7 @@ binding in the `popup-keys:run-kmacro' menu."
         ;; Insert into the popup-keys menu.  Also bind it under C-x C-S-K for use
         ;; in keyboard macros.
         (let* ((formatted (format-kbd-macro last-kbd-macro 1))
-               (descr (popups:truncate-string formatted 17 ".."))
+               (descr (popup-keys:truncate-string formatted 17 ".."))
                (chstr (char-to-string ch))
                (newseq (concat "C-x C-S-K " chstr)))
           (popup-keys:add-thing
@@ -504,8 +510,9 @@ binding in the `popup-keys:run-kmacro' menu."
 
 ;; Interactive version of the multipurpose register/rectangle/bookmark keymap
 ;; (C-x r).  This is quite useful as it displays the contents of several
-;; registers.  It also keeps the popup window open while interactively prompting
-;; in several commands so you can see what you're doing.
+;; registers as context.  It also keeps the popup window open while
+;; interactively prompting in several commands so you can see what you're doing,
+;; using `:keepbuf' value 'args.
 
 ;; Suggested keybindings:
 
@@ -518,15 +525,15 @@ binding in the `popup-keys:run-kmacro' menu."
 ;;;###autoload (autoload 'popup-keys:run-registers "popup-keys-examples" "Popup named registers" t)
 (popup-keys:new
  'popup-keys:run-registers
- :header 'popups:register-header
+ :header 'popup-keys:register-header
  :more-help (popup-keys:info-node "(emacs) Registers")
- :actions `(("DEL" "delete register"   popups:delete-register :keepbuf args)
+ :actions `(("DEL" "delete register"   popup-keys:delete-register :keepbuf args)
             ("SPC" "point to reg"      point-to-register :keepbuf args)
             ;; alternate keybindings (invisible)
             ("C-@" nil                 point-to-register :keepbuf args)
             ("C-SPC" nil               point-to-register :keepbuf args)
-            ("F" "file pos to reg"     popups:point-to-file-register :keepbuf args)
-            ("M-f" "file name to reg"  popups:fname-to-file-register :keepbuf args)
+            ("F" "file pos to reg"     popup-keys:point-to-file-register :keepbuf args)
+            ("M-f" "file name to reg"  popup-keys:fname-to-file-register :keepbuf args)
             ("j" "jump to reg"         jump-to-register :keepbuf args)
 
             ("s" "region to reg"       copy-to-register :keepbuf args)
@@ -565,18 +572,18 @@ binding in the `popup-keys:run-kmacro' menu."
             ))
 
 ;; ** header
-(defvar popups:register-max-regs 5
+(defvar popup-keys:register-max-regs 5
   "Display this many registers in the registers popup header.")
 
 ;; Is there really no builtin function for this?
-(defun popups:quote-escape-string (str)
+(defun popup-keys:quote-escape-string (str)
   "Replace some control characters with their escaped equivalents in STR."
   (setq str (replace-regexp-in-string "[\t]" "\\t" str t t))
   (setq str (replace-regexp-in-string "[\n]" "\\n" str t t))
   (setq str (replace-regexp-in-string "[\r]" "\\r" str t t))
   (setq str (replace-regexp-in-string "[\f]" "\\f" str t t)))
 
-(defun popups:register-header (popup)
+(defun popup-keys:register-header (popup)
   "Display registers.  POPUP is unused."
   (insert (propertize (format "Registers (%d total):\n"
                               (length register-alist))
@@ -588,7 +595,7 @@ binding in the `popup-keys:run-kmacro' menu."
      for (char . val) in regs
        for i = 1 then (1+ i)
        for key = (single-key-description char)
-       if (<= i popups:register-max-regs) do
+       if (<= i popup-keys:register-max-regs) do
          (insert
           (propertize (format "%5s " key)
                       'face 'font-lock-function-name-face)
@@ -612,16 +619,16 @@ binding in the `popup-keys:run-kmacro' menu."
              (format "file (query): %s, position %d"
                      (file-name-nondirectory (cadr val)) (caddr val)))
             ((consp val) ; rectangle
-             (let ((str (popups:quote-escape-string (car val))))
+             (let ((str (popup-keys:quote-escape-string (car val))))
                (format "rectangle (%d lines): \"%s\"%s"
                        (length val)
-                       (popups:truncate-string str popups:header-max-len
+                       (popup-keys:truncate-string str popup-keys:header-max-len
                                             "[...]")
                        (if (> (length val) 1) " etc." ""))))
             ((stringp val)
-             (let ((str (popups:quote-escape-string val)))
+             (let ((str (popup-keys:quote-escape-string val)))
                (concat "\""
-                       (popups:truncate-string str popups:header-max-len
+                       (popup-keys:truncate-string str popup-keys:header-max-len
                                                "[...]")
                        "\"")))
             ((vectorp val)
@@ -635,13 +642,13 @@ binding in the `popup-keys:run-kmacro' menu."
   (insert "\n"))
 
 ;; ** functions
-(defun popups:delete-register (register)
+(defun popup-keys:delete-register (register)
   "Delete REGISTER from `register-alist'."
   (interactive "cDelete register: \n")
   (setq register-alist
         (delete (assoc register register-alist) register-alist)))
 
-(defun popups:point-to-file-register (register)
+(defun popup-keys:point-to-file-register (register)
   "Add a file-query reference to REGISTER."
   (interactive "cFile query to register: \n")
   (if buffer-file-name
@@ -649,7 +656,7 @@ binding in the `popup-keys:run-kmacro' menu."
                     (list 'file-query buffer-file-name (point)))
     (message "Buffer is not associated with a file.")))
 
-(defun popups:fname-to-file-register (register)
+(defun popup-keys:fname-to-file-register (register)
   "Add a filename to REGISTER."
   (interactive "cFile name to register: \n")
   (if buffer-file-name
@@ -667,9 +674,10 @@ binding in the `popup-keys:run-kmacro' menu."
 ;; fact that actions can be executed in the original buffer without closing the
 ;; popup buffer.
 
-;; Have to change bindings in the mode hook.  It doesn't work to do this
+;; You have to change bindings in the mode hook.  It doesn't work to do this
 ;; after-load "dired" because dired-x defines commands in the * and % prefixes.
-;; Even after-load "dired-x" doesn't work, maybe because dired-x loads lazily.
+;; Even after-load "dired-x" doesn't work for some reason, maybe because dired-x
+;; loads lazily.
 
 ;; (add-hook 'dired-mode-hook
 ;;           (lambda ()
@@ -856,7 +864,7 @@ binding in the `popup-keys:run-kmacro' menu."
 
 ;; ** functions
 
-(defun popups:dired-count-marks ()
+(defun popup-keys:dired-count-marks ()
   "Count the number of marked files."
   (interactive)
   (require 'dired)
@@ -888,7 +896,7 @@ binding in the `popup-keys:run-kmacro' menu."
 (popup-keys:new
  'popup-keys:run-ibuffer
  :more-help 'describe-mode
- :actions `(;; digit arguments
+ :actions `(;; digit arguments (invisible)
             ("0" nil digit-argument :keepbuf t)
             ("1" nil digit-argument :keepbuf t)
             ("2" nil digit-argument :keepbuf t)
@@ -1147,11 +1155,12 @@ binding in the `popup-keys:run-kmacro' menu."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; * Org speed
 
-;; This popup is a reimplementation of org-mode's speed keybindings.  Using
-;; popup keys has the advantage that the keys can be run from anywhere (not just
-;; on a heading line), and we don't have to rebind `self-insert-command' to make
-;; it happen.  The speed comes from the fact that most actions do not close the
-;; popup buffer window.
+;; This popup is a reimplementation of org-mode's speed commands.  Using popup
+;; keys has the advantage that the keys can be run from anywhere (not just on a
+;; heading line), and we don't have to rebind `self-insert-command' to make it
+;; happen.  The "speed" comes from the fact that most actions do not close the
+;; popup buffer window, so after opening the popup each command only requires
+;; one keystroke.
 
 ;; Suggested keybinding:
 
@@ -1165,6 +1174,8 @@ binding in the `popup-keys:run-kmacro' menu."
  'popup-keys:run-org-speed
  :buf-name "*org speed*"
  :actions '(;; navigation
+            ;; Use the `:help' option to redirect the user to the underlying
+            ;; function's documentation.
             ("n" "next heading"   (org-speed-move-safe 'outline-next-visible-heading)
              :keepbuf t :help (describe-function 'outline-next-visible-heading))
             ("p" "prev heading"   (org-speed-move-safe 'outline-previous-visible-heading)
