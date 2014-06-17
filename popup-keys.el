@@ -23,11 +23,59 @@
 
 ;;; Commentary:
 
-;; Please see the README.org file at http://github.com/QBobWatson/popup-keys
-;; for usage information.
+;; *popup-keys* is a user interface package based on the extremely useful
+;; *magit-key-mode* in the Magit package.  It is an interactive keymap supporting
+;; context and arguments.
+;;
+;; The basic functionality of the package is described here.  For usage
+;; information see the README.org file at
+;;
+;;   http://github.com/QBobWatson/popup-keys
+;;
+;; Also see the examples in popup-keys-examples.el.
 
-;; This library is based on magit-key-mode.el from the Magit package at
-;; https://github.com/magit/magit
+;;; Library functionality:
+
+;; The `popup-keys:new' function creates new popup command.  Actually it only
+;; stores the popup definition in the hash table `popup-keys:popups' --- all
+;; initialization is lazy --- so this function takes negligible time to execute.
+;; See the documentation for `popup-keys:new' for details on popup definitions.
+;;
+;; When a popup command is executed, it opens a buffer in a new window below the
+;; active window containing three kinds of items: actions, switches, and
+;; arguments.  An "action" is a command to execute (or a function to run, or a
+;; form to evaluate; see `popup-keys:new').  An argument is an arbitrary object
+;; that the user can enter with a configurable prompt function.  A switch is a
+;; boolean argument that can be toggled.  The current values of the popup's
+;; arguments and switches are stored in the buffer-local property list
+;; `popup-keys:current-args'.  Also when the popup command is executed, any
+;; context is rendered using the popup's `:header' hook.
+;;
+;; When the user runs an action, any pre-action hooks are run (see the
+;; `:pre-action' popup and action arguments), their return values are let-bound,
+;; the current value of `popup-keys:current-args' is let-bound in
+;; `popup-keys:action-args', and the action is executed.  At this point the
+;; popup window is closed unless the `:keepbuf' action argument is set, or one
+;; of the hooks sets `popup-keys:keep-buffer'.  See `popup-keys:do-action'.
+;;
+;; When the user runs an argument, he/she is prompted using the `:read' argument
+;; option, the `:post-arg' hook is run, and the new value of the argument is
+;; displayed using `prin1-to-string'.  When the user runs a switch, it is
+;; toggled and the `:post-arg' hook is run.
+;;
+;; The variables listed under "Internal variables" below are available to
+;; hooks.
+;;
+;; Actions, arguments, and switches can be dynamically added to a popup using
+;; `popup-keys:add-thing'.
+;;
+;; Since popup commands are not created by a function that the autoload cookie
+;; recognizes, autoload cookies have to be created manually.  See
+;; `popup-keys:write-autoload' for a convenience function to help with this.
+;;
+;; There are a number of customization options available in the `popup-keys'
+;; group.  To customize this package, use
+;;        M-x customize-group RET popup-keys RET
 
 ;;; Code:
 

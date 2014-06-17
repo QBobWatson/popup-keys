@@ -226,6 +226,9 @@ overridden by popup commands (the modifier key =S-= is "shift" and =s-= is "supe
 + =M-s-s= (=isearch-forward-regexp=) and =M-s-r= (=isearch-backward-regexp=): likewise
   for regexp isearches.
 
+There are a number of customization options available in the =popup-keys= group.
+To customize this package use =M-x customize-group RET popup-keys RET=.
+
 *** Defining new popups
 :PROPERTIES:
 :CUSTOM_ID: defining-new-popups
