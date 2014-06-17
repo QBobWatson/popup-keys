@@ -338,8 +338,8 @@ When ARG is :projectdir, translate VAL into a project root."
 ;; + It takes advantage of the :keepbuf argument to popup actions, which allows
 ;;   the action to be executed without closing the popup window.  So to execute
 ;;   the second keyboard macro in the macro ring repeatedly, open the popup and
-;;   just keep pressing "C-l".  This is an elegant way of emulating the
-;;   repeat-key functionality of the standard kmacro key bindings
+;;   just keep pressing "C-l".  This is an elegant way of implementing the
+;;   repeat-key functionality of the standard kmacro key bindings.
 ;;
 ;; + It dynamically adds new actions to the popup when you bind a keyboard macro
 ;;   to a number or a capital letter.  Running the action keeps the buffer open,
@@ -977,7 +977,7 @@ binding in the `popup-keys:run-kmacro' menu."
             ("I" "... regexp"          ibuffer-do-query-replace-regexp)
             ("M-f" "multi isearch"     ibuffer-do-isearch)
             ("C-M-f" "... regexp"      ibuffer-do-isearch-regexp)
-            ("U" "replace regexp"    ibuffer-do-replace-regexp)
+            ("U" "replace regexp"      ibuffer-do-replace-regexp)
             ("R" "rename uniquely"     ibuffer-do-rename-uniquely :keepbuf t)
             ("S" "save marked"         ibuffer-do-save :keepbuf t)
             ("T" "toggle read-only"    ibuffer-do-toggle-read-only :keepbuf t)
