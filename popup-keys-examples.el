@@ -72,7 +72,7 @@
 
 ;;;###autoload (autoload 'popup-keys:run-findtool "popup-keys-examples" "Popup named findtool" t)
 (popup-keys:new
- 'findtool
+ 'popup-keys:run-findtool
  :buf-name "*find tools*"
  :actions '(("d" "find-name-dired" find-name-dired)
             ("D" "find-dired" find-dired)
@@ -96,7 +96,7 @@
 
 ;;;###autoload (autoload 'popup-keys:run-debug-commands "popup-keys-examples" "Popup named debug-commands" t)
 (popup-keys:new
- 'debug-commands
+ 'popup-keys:run-debug-commands
  :header #'(lambda (popup)
              (require 'debug)
              (defvar debug-on-error)
@@ -143,7 +143,7 @@
 
 ;;;###autoload (autoload 'popup-keys:run-vc "popup-keys-examples" "Popup named vc" t)
 (popup-keys:new
- 'vc
+ 'popup-keys:run-vc
  :buf-name "*VC keys*"
  ;; header function to display context
  :header #'(lambda (popup)
@@ -232,7 +232,7 @@
 
 ;;;###autoload (autoload 'popup-keys:run-projectile "popup-keys-examples" "Popup named projectile" t)
 (popup-keys:new
- 'projectile
+ 'popup-keys:run-projectile
  :buf-name "*Projectile dispatcher*"
  :actions '(("h" "helm-projectile"     helm-projectile)
             ("f" "find file"           projectile-find-file)
@@ -361,7 +361,7 @@ When ARG is :projectdir, translate VAL into a project root."
 
 ;;;###autoload (autoload 'popup-keys:run-kmacro "popup-keys-examples" "Popup named kmacro" t)
 (popup-keys:new
- 'kmacro
+ 'popup-keys:run-kmacro
  :buf-name "*kmacro keys*"
  :more-help (popup-keys:info-node "(emacs) Keyboard Macros")
  :header #'(lambda (popup)
@@ -517,7 +517,7 @@ binding in the `popup-keys:run-kmacro' menu."
 
 ;;;###autoload (autoload 'popup-keys:run-registers "popup-keys-examples" "Popup named registers" t)
 (popup-keys:new
- 'registers
+ 'popup-keys:run-registers
  :header 'popups:register-header
  :more-help (popup-keys:info-node "(emacs) Registers")
  :actions `(("DEL" "delete register"   popups:delete-register :keepbuf args)
@@ -681,7 +681,7 @@ binding in the `popup-keys:run-kmacro' menu."
 ;; ** general
 ;;;###autoload (autoload 'popup-keys:run-dired "popup-keys-examples" "Popup named dired" t)
 (popup-keys:new
- 'dired
+ 'popup-keys:run-dired
  :more-help (popup-keys:info-node "(emacs) Dired")
  :actions '(;; navigation
             ("n" "next line"           dired-next-line :keepbuf t)
@@ -781,7 +781,7 @@ binding in the `popup-keys:run-kmacro' menu."
 ;; ** regexp operations
 ;;;###autoload (autoload 'popup-keys:run-dired-regexp "popup-keys-examples" "Popup named dired-regexp" t)
 (popup-keys:new
- 'dired-regexp
+ 'popup-keys:run-dired-regexp
  :more-help (popup-keys:info-node "(emacs) Transforming File Names")
  :actions '(("m" "mark regexp exact"   dired-mark-files-regexp)
             ("g" "mark regexp in"      dired-mark-files-containing-regexp)
@@ -803,7 +803,7 @@ binding in the `popup-keys:run-kmacro' menu."
 ;; ** mark operations
 ;;;###autoload (autoload 'popup-keys:run-dired-mark "popup-keys-examples" "Popup named dired-mark" t)
 (popup-keys:new
- 'dired-mark
+ 'popup-keys:run-dired-mark
  :header #'(lambda (popup)
              (let (marks flags)
                (with-current-buffer popup-keys:orig-buffer
@@ -886,7 +886,7 @@ binding in the `popup-keys:run-kmacro' menu."
 ;; ** general
 ;;;###autoload (autoload 'popup-keys:run-ibuffer "popup-keys-examples" "Popup named ibuffer" t)
 (popup-keys:new
- 'ibuffer
+ 'popup-keys:run-ibuffer
  :more-help 'describe-mode
  :actions `(;; digit arguments
             ("0" nil digit-argument :keepbuf t)
@@ -993,7 +993,7 @@ binding in the `popup-keys:run-kmacro' menu."
 ;; ** mark operations
 ;;;###autoload (autoload 'popup-keys:run-ibuffer-mark "popup-keys-examples" "Popup named ibuffer-mark" t)
 (popup-keys:new
- 'ibuffer-mark
+ 'popup-keys:run-ibuffer-mark
  :header #'(lambda (popup)
              (let (marks flags)
                (with-current-buffer popup-keys:orig-buffer
@@ -1051,7 +1051,7 @@ binding in the `popup-keys:run-kmacro' menu."
 
 ;;;###autoload (autoload 'popup-keys:run-ibuffer-filter "popup-keys-examples" "Popup named ibuffer-filter" t)
 (popup-keys:new
- 'ibuffer-filter
+ 'popup-keys:run-ibuffer-filter
  :header #'(lambda (popup)
              (require 'ibuf-ext)
              (let ((qualifiers
@@ -1115,7 +1115,7 @@ binding in the `popup-keys:run-kmacro' menu."
 
 ;;;###autoload (autoload 'popup-keys:run-undo-tree "popup-keys-examples" "Popup named undo-tree" t)
 (popup-keys:new
- 'undo-tree
+ 'popup-keys:run-undo-tree
  :actions '(("C-q" "abort"             undo-tree-visualizer-abort)
             ("p" "undo"                undo-tree-visualize-undo :keepbuf t)
             ("C-p" nil                 undo-tree-visualize-undo :keepbuf t)
@@ -1162,7 +1162,7 @@ binding in the `popup-keys:run-kmacro' menu."
 
 ;;;###autoload (autoload 'popup-keys:run-org-speed "popup-keys-examples" "Popup named org-speed" t)
 (popup-keys:new
- 'org-speed
+ 'popup-keys:run-org-speed
  :buf-name "*org speed*"
  :actions '(;; navigation
             ("n" "next heading"   (org-speed-move-safe 'outline-next-visible-heading)
