@@ -11,6 +11,7 @@
   - [[#org-speed-commands][Org speed commands]]
   - [[#special-modes][Special modes]]
 + [[#usage][Usage]]
+  - [[#installation][Installation]]
   - [[#interface][Interface]]
   - [[#defining-new-popups][Defining new popups]]
 + [[#advantages][Advantages]]
@@ -183,6 +184,24 @@ the =*= prefix every time.
 :PROPERTIES:
 :CUSTOM_ID: usage
 :END:
+
+*** Installation
+:PROPERTIES:
+:CUSTOM_ID: installation
+:END:
+
+To install *popup-keys* just put =popup-keys.el= in a place where Emacs can find it.
+The library alone doesn't do anything; you still have to define popup commands
+using =popup-keys:new= (see [[#defining-new-popups][below]]).
+
+There are many ready-to-use example popups included in =popup-keys-examples.el=.
+To use them, run =(require 'popup-keys-examples)= somewhere in your =.emacs= file
+and define keybindings for the commands you want to use.  You may not have to
+explicitly require =popup-keys-examples= if your package manager extracted the
+autoloads correctly.  There is Lisp code for defining suggested keybindings in
+the comments in =popup-keys-examples.el=.
+
+TODO: El-Get and MELPA recipes
 
 *** Interface
 :PROPERTIES:
