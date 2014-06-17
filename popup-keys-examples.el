@@ -483,7 +483,7 @@ binding in the `popup-keys:run-kmacro' menu."
                (chstr (char-to-string ch))
                (newseq (concat "C-x C-S-K " chstr)))
           (popup-keys:add-thing
-           'kmacro 'action
+           'popup-keys:run-kmacro 'action
            chstr (concat "[" descr "]") to-bind
            :pre-action '(progn (unless defining-kbd-macro
                                  (setq popup-keys:keep-buffer t))
