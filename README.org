@@ -1,9 +1,9 @@
 #+TITLE: popup-keys — Interactive keymaps with context and arguments
-#+OPTIONS: H:2
+#+OPTIONS: H:2 toc:2
 
 * Introduction
 
-*popup-keys* is a user interface package derived from the extremely useful
+*popup-keys* is a user interface package based on the extremely useful
 *magit-key-mode* in the [[https://github.com/magit/magit][Magit]] package.  It is an /interactive keymap/ supporting
 /context/ and /arguments/.
 
@@ -12,10 +12,11 @@
   commands are bound to keys.  In order to take advantage of this power, one has
   to be able to remember which commands are available, and to which keys they
   are bound.  Emacs has reasonably good facilities for documenting its available
-  keymaps, but it is somewhat inconvenient to have to open a help buffer or run
-  =describe-keymap= while in the middle of doing something else, and a user who is
-  familiar with a set of commonly-used commands in a particular keymap may
-  forget about the other available commands entirely.
+  keymaps, but it is somewhat inconvenient to interrupt what you are doing to
+  open a help buffer or run =describe-keymap= to find a binding for a command
+  whose name you can't remember.  Moreover, once you are familiar with a set of
+  commonly-used commands in a particular keymap you may forget about the other
+  available commands entirely.
 
   *popup-keys* can be used as an interactive keymap.  A prefix key, for example
   =C-x v=, can be bound to a popup command, which opens a small window listing
@@ -68,10 +69,9 @@ after you open the popup; the key sequence is then mangled so that the correct
 keys are recorded by *kmacro*.  The included =popup-keys:run-kmacro= command has the
 following additional features:
 
- + It takes advantage of the =:keepbuf= argument to popup actions, which allows
-   the action to be executed without closing the popup window.  So to execute
-   the second keyboard macro in the macro ring repeatedly, open the popup and
-   just keep pressing =C-l=.  This is an elegant way of implementing the
+ + Most actions are executed without closing the popup window.  For instance, to
+   execute the second keyboard macro in the macro ring repeatedly, open the
+   popup and just keep pressing =C-l=.  This is an elegant way of implementing the
    repeat-key functionality of the standard kmacro key bindings, which of course
    can be used in many other contexts.  See also [[https://github.com/myuhe/smartrep.el][smartrep]].
 
@@ -92,12 +92,13 @@ multipurpose keymap used for manipulating registers, rectangles, and bookmarks.
 In order to use it effectively, one has to remember what is stored in which
 registers, in addition to knowing the commands for accessing them.  The included
 =popup-keys:run-registers= command displays (a summary of) the contents of the
-first few registers as context, much like =helm-register=.  When executing a
-command like =jump-to-register=, it keeps the popup window open while the
-interactive arguments are being read (i.e. while the command prompts for a
-register key), then closes the window to actually execute the command.  This
-decoupling of the interactive part of the command from the functional part is
-useful because you can still see the context while you're being prompted for it.
+first few registers as context, much like =helm-register= from the [[https://github.com/emacs-helm/helm][Helm]]
+package. When executing a command like =jump-to-register=, it keeps the popup
+window open while the interactive arguments are being read (i.e. while the
+command prompts for a register key), then closes the window to actually execute
+the command.  This decoupling of the interactive part of the command from the
+functional part is useful because you can still see the context while you're
+being prompted for it.
 
 [[./img/registers.jpg]]
 
@@ -109,20 +110,20 @@ installed under the =C-c p= prefix key.  By default all of these commands operat
 on the package containing =default-directory= (usually the directory containing
 the buffer's file).  The included =popup-keys:run-projectile= command uses an
 argument to allow you to change the active Projectile project root before
-running any of these commands, in addition to reminding you that =C-c p 4 C-o=
-displays a project buffer in the other window.
+running any of these commands, in addition to reminding you that, for instance,
+=C-c p 4 C-o= displays a project buffer in the other window.
 
 [[./img/projectile.jpg]]
 
-** Org speed keys
+** Org speed commands
 
 [[http://orgmode.org/][org-mode]] has a feature called /speed commands/ which allows you to quickly navigate
-around and perform operations on the document structure with single key presses
+around and perform operations on the document structure with single keystrokes
 when the point is located at the beginning of a header line.  The included
 =popup-keys:run-org-speed= command reimplements this feature in a popup.  Since
 most actions do not close the popup window, after executing
 =popup-keys:run-org-speed= (the suggested keybinding is =M-S-s=) each command only
-requires a single keypress, so this recovers the "speed" part of the feature
+requires a single keystroke, so this recovers the "speed" part of the feature
 without needing to remap =self-insert-command=.  In addition, the available
 actions can be run from anywhere, not just at the beginning of a header line.
 And of course the popup window reminds you which commands are available.
@@ -146,25 +147,68 @@ with a command reference and a mark count always visible.
 
 * Advantages
 
+1. When using a popup to replace a keymap assigned to a prefix key, the key
+   sequences you already know will continue to work (assuming you assign the
+   keys in the popup to the same commands as the original keymap).  In other
+   words, if you assign =C-x r= to =popup-keys:run-registers=, then the key sequence
+   =C-x r i= still runs =insert-register=, after displaying the first few registers
+   as context and reminding you what commands are available.
+
+2. Frequently seeing the full list of commands available in a keymap is a great
+   way to learn about new commands and remember commands you've forgotten.
+
+3. You can run =isearch= in a popup window (with the usual keybinding =C-s=, unless
+   that binding is defined by the popup, in which case =s-s= will work).  This
+   makes finding rarely-used commands even easier.
+
+4. Popup actions can be configured to keep the popup window open after
+   executing.  This allows you to execute several commands from the same keymap
+   with single keystrokes.  Alternatively, the popup window can be kept open
+   while the command reads its interactive arguments (so you can refer to any
+   displayed context), and then closed before the command executes.  See
+   the [[#use-cases][use cases]].
+
+5. When a popup window is open, pressing =? <key>= displays a (configurable) help
+   buffer for that command.  By default this runs =describe-command= on the
+   command bound to =<key>=.  The key sequence =? ?= displays a (configurable) help
+   buffer relevant to that popup.  For example, typing =? ?= in the
+   =popup-keys:run-kmacro= popup opens the info node "(emacs) Keyboard Macros".
+
+6. Prefix arguments for commands contained in a popup can be entered before
+   opening the popup or after the popup is opened, before entering command key.
+   This even works while defining keyboard macros when using the
+   =popup-keys:run-kmacro= popup.  See [[#usage][usage]] below.
+
+7. It is easy to define new popup commands using =popup-keys:new=.
+
 * Limitations
 
+1. The method for passing arguments from the popup to commands is a bit
+   unnatural.  Interactive commands do not take arguments, so the current
+   argument values are stored in the property list =popup-keys:current-args=
+   before the command is executed; the command itself must parse the arguments.
+   Alternatively, with the =:pass-kwargs= action option, the command will be run
+   noninteractively with =popup-keys:current-args= passed as keyword arguments.
+   As a third option, a pre-action hook can use the value of
+   =popup-keys:current-args= to setup the environment in which the command will be
+   run, e.g. by let-binding certain variables.  None of these options is
+   elegant.
+
+2. It is not currently possible to run a popup in "invisible" mode.  For
+   example, one might want to use =popup-keys:run-org-speed= (see [[#use-cases][use cases]]) as a
+   prefix keymap that doesn't require you to retype the prefix key each time,
+   without actually opening the popup window.  Such a feature is not planned.
+
 * Usage
+:PROPERTIES:
+:CUSTOM_ID: usage
+:END:
+
 
 * TODO
 
-+ keybindings you already know still work
-+ actually use the power of Emacs by seeing what commands are available
-+ isearch for keys
-+ repeat keys
-+ easy to get action and general help
-+ display what you're doing in one-key modes like dired, ibuffer
-+ speed keys for navigation like in org mode (don't rebind self-insert-command!)
-+ use cases: useful popups
-+ screenshots
 
 + document how prefix arguments work
 
-+ shortcomings:
-  - can't run popup invisibly: it actually pops up, which can be annoying
-  - doesn't pass args to functions in a natural way
++ writing popups: where to find API docs
 
