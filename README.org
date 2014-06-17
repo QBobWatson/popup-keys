@@ -3,22 +3,22 @@
 
 ** Table of Contents
 
-+ [[#intro][Introduction]]
++ [[#introduction][Introduction]]
 + [[#use-cases][Use cases]]
-  - [[#kmacro][Keyboard macros]]
+  - [[#keyboard-macros][Keyboard macros]]
   - [[#registers][Registers]]
   - [[#projectile][Projectile]]
-  - [[#org-speed][Org speed commands]]
-  - [[#special][Special modes]]
+  - [[#org-speed-commands][Org speed commands]]
+  - [[#special-modes][Special modes]]
 + [[#usage][Usage]]
   - [[#interface][Interface]]
-  - [[#new-popups][Defining new popups]]
+  - [[#defining-new-popups][Defining new popups]]
 + [[#advantages][Advantages]]
 + [[#limitations][Limitations]]
 
 ** Introduction
 :PROPERTIES:
-:CUSTOM_ID: intro
+:CUSTOM_ID: introduction
 :END:
 
 *popup-keys* is a user interface package based on the extremely useful
@@ -75,7 +75,7 @@ other examples can be found ready to use in the included library
 
 *** Keyboard macros
 :PROPERTIES:
-:CUSTOM_ID: kmacro
+:CUSTOM_ID: keyboard-macros
 :END:
 
 Emacs has a powerful keyboard macro creation and editing library called *kmacro*
@@ -144,7 +144,7 @@ running any of these commands, in addition to reminding you that, for instance,
 
 *** Org speed commands
 :PROPERTIES:
-:CUSTOM_ID: org-speed
+:CUSTOM_ID: org-speed-commands
 :END:
 
 [[http://orgmode.org/][org-mode]] has a feature called /speed commands/ which allows you to quickly navigate
@@ -162,7 +162,7 @@ And of course the popup window reminds you which commands are available.
 
 *** Special modes
 :PROPERTIES:
-:CUSTOM_ID: special
+:CUSTOM_ID: special-modes
 :END:
 
 In Emacs, a /special mode/ is a mode where the user does not directly insert text;
@@ -228,7 +228,7 @@ overridden by popup commands (the modifier key =S-= is "shift" and =s-= is "supe
 
 *** Defining new popups
 :PROPERTIES:
-:CUSTOM_ID: new-popups
+:CUSTOM_ID: defining-new-popups
 :END:
 
 Use the =popup-keys:new= function to define new popup commands.  The first
