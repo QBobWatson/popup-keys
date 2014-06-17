@@ -55,7 +55,7 @@
 
 *popup-keys* is best illustrated by example, so here are several.  These and many
 other examples can be found ready to use in the included library
-=popup-keys-examples.el=.
+=popup-keys-examples.el=.  For usage see [[#usage][usage]].
 
 *** Keyboard macros
 
@@ -147,6 +147,81 @@ with a command reference and a mark count always visible.
 
 [[./img/dired-mark.jpg]]
 
+** Usage
+:PROPERTIES:
+:CUSTOM_ID: usage
+:END:
+
+*** Interface
+
+The *popup-keys* user interface is simple.  When the popup window is open, typing
+the key (or key sequence) shown before an action, argument, or switch executes
+that item.  Alternatively, you can execute an item by placing the cursor on that
+item and pressing =RET=.  The usual cursor navigation keys (=C-f=, =C-p=, etc.) work
+as usual, unless they are bound to actions by the popup.  In any case =TAB= and
+=S-TAB= (backtab) places the cursor at the next (respectively, previous) item in
+the popup.
+
+By default, executing an action closes the popup window and resets the window
+configuration to its state before the popup was opened.  This can be configured
+(by the popup definition) with the =:keepbuf= argument and the
+=popup-keys:keep-buffer= variable.
+
+You can enter prefix arguments either before invoking the popup, or while the
+popup is open before executing an action.  In other words, if =popup-keys:run-vc=
+is bound to =C-x v=, then the key sequences =C-u C-x v D= and =C-x v C-u D= have the
+same effect.
+
+The following "base" keybindings are available in any popup and cannot be
+overridden by popup commands (the modifier key =S-= is "shift" and =s-= is "super"):
+
++ =RET= (=popup-keys:exec-at-point=): execute the action, change the argument, or
+  toggle the switch at point.
++ =TAB= (=popup-keys:jump-to-next-exec=) and =S-TAB= (=popup-keys:jump-to-prev-exec=):
+  move point to the next or previous item.
++ =?= (=popup-keys:dispatch-help=): prompt for a key and run the configurable help
+  action associated to that key.  The key sequence =? ?= runs a general help
+  action that applies to the whole popup, like displaying an info page.
++ =C-g= or =q=: quit the popup and reset the window configuration to its state
+  before the popup was opened.
++ =s-l= (=popup-keys:reset-windows=): reset the window configuration to its state
+  just after the popup was opened.  This is useful for closing help windows.
++ =s-s= (=isearch-forward=) and =s-r= (=isearch-backward=): alternate keybindings for
+  isearch; useful for popups which use the usual bindings =C-s= and =C-r= for
+  something else.
++ =M-s-s= (=isearch-forward-regexp=) and =M-s-r= (=isearch-backward-regexp=): likewise
+  for regexp isearches.
+
+*** Defining new popups
+
+Use the =popup-keys:new= function to define new popup commands.  The first
+parameter is the command name and the rest are keyword arguments.  The following
+simple popup definition can be found in =popup-keys-examples.el=:
+
+#+BEGIN_SRC emacs-lisp
+(popup-keys:new
+ 'popup-keys:run-findtool
+ :buf-name "*find tools*"
+ :actions '(("d" "find-name-dired" find-name-dired)
+            ("D" "find-dired" find-dired)
+            ("h" "helm-find (C-u: prompt)" helm-find)
+            ("l" "helm-locate" helm-locate)
+            ("a" "ack-find-file" ack-find-file)
+            ("A" "ack-find-file-same" ack-find-file-same)
+            ("F" "helm-for-files" helm-for-files)
+            ("f" "helm-find-files" helm-find-files)))
+#+END_SRC
+
+This makes a popup command =popup-keys:run-findtools= which collects eight actions
+used for finding files on the filesystem from within Emacs.
+
+[[./img/findtools.jpg]]
+
+See the documentation string for =popup-keys:new= for a full list of keyword
+arguments and their meanings.  Also see the comments at the beginning of
+=popup-keys.el=.  The best place to start is probably by looking at the examples
+in =popup-keys-examples.el=.
+
 ** Advantages
 
 1. When using a popup to replace a keymap assigned to a prefix key, the key
@@ -179,7 +254,7 @@ with a command reference and a mark count always visible.
 6. Prefix arguments for commands contained in a popup can be entered before
    opening the popup or after the popup is opened, before entering command key.
    This even works while defining keyboard macros when using the
-   =popup-keys:run-kmacro= popup.  See [[#usage][usage]] below.
+   =popup-keys:run-kmacro= popup.  See [[#usage][usage]].
 
 7. It is easy to define popup commands using =popup-keys:new=.
 
@@ -201,17 +276,4 @@ with a command reference and a mark count always visible.
    prefix keymap that doesn't require you to retype the prefix key each time,
    without actually opening the popup window.  Such a feature is not planned; if
    this is what you want, see [[https://github.com/myuhe/smartrep.el][smartrep]].
-
-** Usage
-:PROPERTIES:
-:CUSTOM_ID: usage
-:END:
-
-
-** TODO
-
-
-+ document how prefix arguments work
-
-+ writing popups: where to find API docs
 
