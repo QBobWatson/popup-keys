@@ -1,9 +1,9 @@
 #+TITLE: popup-keys — Interactive keymaps with context and arguments
-#+OPTIONS: H:2
+#+OPTIONS: H:3
 
 #+TOC: headlines 2
 
-* Introduction
+** Introduction
 
 *popup-keys* is a user interface package based on the extremely useful
 *magit-key-mode* in the [[https://github.com/magit/magit][Magit]] package.  It is an /interactive keymap/ supporting
@@ -48,7 +48,7 @@
   arguments used to run git.  See the [[#use-cases][use cases]] described below for an example
   of using arguments with commands from the Projectile keymap.
 
-* Use cases
+** Use cases
 :PROPERTIES:
 :CUSTOM_ID: use-cases
 :END:
@@ -57,7 +57,7 @@
 other examples can be found ready to use in the included library
 =popup-keys-examples.el=.
 
-** Keyboard macros
+*** Keyboard macros
 
 Emacs has a powerful keyboard macro creation and editing library called *kmacro*
 which is accessed by default via the prefix key sequence =C-x C-k=.  This is one
@@ -87,7 +87,7 @@ following additional features:
 
 [[./img/kmacro.jpg]]
 
-** Registers
+*** Registers
 
 The registers keymap =ctl-x-r-map=, by default bound to =C-x r=, is a large
 multipurpose keymap used for manipulating registers, rectangles, and bookmarks.
@@ -104,7 +104,7 @@ being prompted for it.
 
 [[./img/registers.jpg]]
 
-** Projectile
+*** Projectile
 
 The [[https://github.com/bbatsov/projectile][Projectile]] package is a way to manipulate files and buffers from the same
 project as a set.  It comes with a large number of commands which are by default
@@ -117,7 +117,7 @@ running any of these commands, in addition to reminding you that, for instance,
 
 [[./img/projectile.jpg]]
 
-** Org speed commands
+*** Org speed commands
 
 [[http://orgmode.org/][org-mode]] has a feature called /speed commands/ which allows you to quickly navigate
 around and perform operations on the document structure with single keystrokes
@@ -132,7 +132,7 @@ And of course the popup window reminds you which commands are available.
 
 [[./img/org-speed.jpg]]
 
-** Special modes
+*** Special modes
 
 In Emacs, a /special mode/ is a mode where the user does not directly insert text;
 instead most single keys are bound to commands.  Examples are =dired-mode= and
@@ -147,7 +147,7 @@ with a command reference and a mark count always visible.
 
 [[./img/dired-mark.jpg]]
 
-* Advantages
+** Advantages
 
 1. When using a popup to replace a keymap assigned to a prefix key, the key
    sequences you already know will continue to work (assuming you assign the
@@ -183,7 +183,7 @@ with a command reference and a mark count always visible.
 
 7. It is easy to define popup commands using =popup-keys:new=.
 
-* Limitations
+** Limitations
 
 1. The method for passing arguments from the popup to commands is a bit
    unnatural.  Interactive commands do not take arguments, so the current
@@ -202,13 +202,13 @@ with a command reference and a mark count always visible.
    without actually opening the popup window.  Such a feature is not planned; if
    this is what you want, see [[https://github.com/myuhe/smartrep.el][smartrep]].
 
-* Usage
+** Usage
 :PROPERTIES:
 :CUSTOM_ID: usage
 :END:
 
 
-* TODO
+** TODO
 
 
 + document how prefix arguments work
