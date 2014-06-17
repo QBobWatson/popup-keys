@@ -572,13 +572,13 @@ This sets `popup-keys:action-args' for use by the action."
                  (t
                   (popup-keys:run-generic-func
                    read
-                   (list 'arg `(quote ,argname))
+                   (list 'arg argname)
                    (list 'curval curval))))))
     (setq popup-keys:current-args
           (plist-put popup-keys:current-args argname input))
     (let ((hook (popup-keys:popup:post-arg popup-keys:current-popup)))
       (popup-keys:run-generic-func hook
-                                   (list 'arg `(quote ,argname))
+                                   (list 'arg argname)
                                    (list 'newval input)))
     (popup-keys:draw)))
 
@@ -591,7 +591,7 @@ This sets `popup-keys:action-args' for use by the action."
           (plist-put popup-keys:current-args switch-name newval))
     (let ((hook (popup-keys:popup:post-arg popup-keys:current-popup)))
       (popup-keys:run-generic-func hook
-                                   (list 'arg `(quote ,switch-name))
+                                   (list 'arg switch-name)
                                    (list 'newval newval))))
   (popup-keys:draw))
 
@@ -821,9 +821,11 @@ If THING is a form, let-bind ARGS and then eval THING.
 If THING is nil, do nothing.  (This is a special case of the above.)
 
 Return the result of running or evaluating THING."
-  (if (functionp thing)
-      (apply thing (mapcar 'cadr args))
-    (eval (list 'let args thing))))
+  (unless (functionp thing)
+    ;; A simple (eval (list 'let args thing)) does the wrong thing since it
+    ;; evaluates the cadr's of args again.
+    (setq thing `(lambda ,(mapcar 'car args) ,thing)))
+  (apply thing (mapcar 'cadr args)))
 
 ;; ** list functions
 (defun popup-keys:next-after (num ring)
