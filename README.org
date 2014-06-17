@@ -1,5 +1,7 @@
 #+TITLE: popup-keys — Interactive keymaps with context and arguments
-#+OPTIONS: H:2 toc:2
+#+OPTIONS: H:2
+
+#+TOC: headlines 2
 
 * Introduction
 
@@ -169,17 +171,17 @@ with a command reference and a mark count always visible.
    the [[#use-cases][use cases]].
 
 5. When a popup window is open, pressing =? <key>= displays a (configurable) help
-   buffer for that command.  By default this runs =describe-command= on the
-   command bound to =<key>=.  The key sequence =? ?= displays a (configurable) help
-   buffer relevant to that popup.  For example, typing =? ?= in the
-   =popup-keys:run-kmacro= popup opens the info node "(emacs) Keyboard Macros".
+   buffer for the command bound to =<key>=.  By default this runs
+   =describe-command=.  The key sequence =? ?= displays a (configurable) help buffer
+   relevant to that popup.  For example, typing =? ?= in the =popup-keys:run-kmacro=
+   popup opens the info node "(emacs) Keyboard Macros".
 
 6. Prefix arguments for commands contained in a popup can be entered before
    opening the popup or after the popup is opened, before entering command key.
    This even works while defining keyboard macros when using the
    =popup-keys:run-kmacro= popup.  See [[#usage][usage]] below.
 
-7. It is easy to define new popup commands using =popup-keys:new=.
+7. It is easy to define popup commands using =popup-keys:new=.
 
 * Limitations
 
@@ -197,7 +199,8 @@ with a command reference and a mark count always visible.
 2. It is not currently possible to run a popup in "invisible" mode.  For
    example, one might want to use =popup-keys:run-org-speed= (see [[#use-cases][use cases]]) as a
    prefix keymap that doesn't require you to retype the prefix key each time,
-   without actually opening the popup window.  Such a feature is not planned.
+   without actually opening the popup window.  Such a feature is not planned; if
+   this is what you want, see [[https://github.com/myuhe/smartrep.el][smartrep]].
 
 * Usage
 :PROPERTIES:
