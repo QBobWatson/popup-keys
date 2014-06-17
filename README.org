@@ -1,9 +1,25 @@
 #+TITLE: popup-keys — Interactive keymaps with context and arguments
 #+OPTIONS: H:3
 
-#+TOC: headlines 2
+** Table of Contents
+
++ [[#intro][Introduction]]
++ [[#use-cases][Use cases]]
+  - [[#kmacro][Keyboard macros]]
+  - [[#registers][Registers]]
+  - [[#projectile][Projectile]]
+  - [[#org-speed][Org speed commands]]
+  - [[#special][Special modes]]
++ [[#usage][Usage]]
+  - [[#interface][Interface]]
+  - [[#new-popups][Defining new popups]]
++ [[#advantages][Advantages]]
++ [[#limitations][Limitations]]
 
 ** Introduction
+:PROPERTIES:
+:CUSTOM_ID: intro
+:END:
 
 *popup-keys* is a user interface package based on the extremely useful
 *magit-key-mode* in the [[https://github.com/magit/magit][Magit]] package.  It is an /interactive keymap/ supporting
@@ -58,6 +74,9 @@ other examples can be found ready to use in the included library
 =popup-keys-examples.el=.  For usage see [[#usage][usage]].
 
 *** Keyboard macros
+:PROPERTIES:
+:CUSTOM_ID: kmacro
+:END:
 
 Emacs has a powerful keyboard macro creation and editing library called *kmacro*
 which is accessed by default via the prefix key sequence =C-x C-k=.  This is one
@@ -88,6 +107,9 @@ following additional features:
 [[./img/kmacro.jpg]]
 
 *** Registers
+:PROPERTIES:
+:CUSTOM_ID: registers
+:END:
 
 The registers keymap =ctl-x-r-map=, by default bound to =C-x r=, is a large
 multipurpose keymap used for manipulating registers, rectangles, and bookmarks.
@@ -105,6 +127,9 @@ being prompted for it.
 [[./img/registers.jpg]]
 
 *** Projectile
+:PROPERTIES:
+:CUSTOM_ID: projectile
+:END:
 
 The [[https://github.com/bbatsov/projectile][Projectile]] package is a way to manipulate files and buffers from the same
 project as a set.  It comes with a large number of commands which are by default
@@ -118,6 +143,9 @@ running any of these commands, in addition to reminding you that, for instance,
 [[./img/projectile.jpg]]
 
 *** Org speed commands
+:PROPERTIES:
+:CUSTOM_ID: org-speed
+:END:
 
 [[http://orgmode.org/][org-mode]] has a feature called /speed commands/ which allows you to quickly navigate
 around and perform operations on the document structure with single keystrokes
@@ -133,6 +161,9 @@ And of course the popup window reminds you which commands are available.
 [[./img/org-speed.jpg]]
 
 *** Special modes
+:PROPERTIES:
+:CUSTOM_ID: special
+:END:
 
 In Emacs, a /special mode/ is a mode where the user does not directly insert text;
 instead most single keys are bound to commands.  Examples are =dired-mode= and
@@ -153,13 +184,16 @@ with a command reference and a mark count always visible.
 :END:
 
 *** Interface
+:PROPERTIES:
+:CUSTOM_ID: interface
+:END:
 
 The *popup-keys* user interface is simple.  When the popup window is open, typing
 the key (or key sequence) shown before an action, argument, or switch executes
 that item.  Alternatively, you can execute an item by placing the cursor on that
 item and pressing =RET=.  The usual cursor navigation keys (=C-f=, =C-p=, etc.) work
-as usual, unless they are bound to actions by the popup.  In any case =TAB= and
-=S-TAB= (backtab) places the cursor at the next (respectively, previous) item in
+as expected, unless they are bound to actions by the popup.  In any case =TAB= and
+=S-TAB= (backtab) place the cursor at the next (respectively, previous) item in
 the popup.
 
 By default, executing an action closes the popup window and resets the window
@@ -193,6 +227,9 @@ overridden by popup commands (the modifier key =S-= is "shift" and =s-= is "supe
   for regexp isearches.
 
 *** Defining new popups
+:PROPERTIES:
+:CUSTOM_ID: new-popups
+:END:
 
 Use the =popup-keys:new= function to define new popup commands.  The first
 parameter is the command name and the rest are keyword arguments.  The following
@@ -223,6 +260,9 @@ arguments and their meanings.  Also see the comments at the beginning of
 in =popup-keys-examples.el=.
 
 ** Advantages
+:PROPERTIES:
+:CUSTOM_ID: advantages
+:END:
 
 1. When using a popup to replace a keymap assigned to a prefix key, the key
    sequences you already know will continue to work (assuming you assign the
@@ -259,6 +299,9 @@ in =popup-keys-examples.el=.
 7. It is easy to define popup commands using =popup-keys:new=.
 
 ** Limitations
+:PROPERTIES:
+:CUSTOM_ID: limitations
+:END:
 
 1. The method for passing arguments from the popup to commands is a bit
    unnatural.  Interactive commands do not take arguments, so the current
