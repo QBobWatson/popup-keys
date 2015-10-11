@@ -103,7 +103,6 @@
              (require 'debug)
              (defvar debug-on-error)
              (defvar debug-on-quit)
-             (defvar debug-function-list)
              (insert
               (propertize "Debug on error:        " 'face 'font-lock-keyword-face)
               (propertize (if debug-on-error "Yes" "No")
@@ -114,7 +113,7 @@
                           'face 'font-lock-constant-face)
               "\n"
               (propertize "Debug entry functions: " 'face 'font-lock-keyword-face)
-              (propertize (prin1-to-string debug-function-list)
+              (propertize (prin1-to-string (debug--function-list))
                           'face 'font-lock-constant-face)
               "\n\n"
               ))
