@@ -22,10 +22,10 @@
 :CUSTOM_ID: introduction
 :END:
 
-This package is not maintained for public distribution.  Apparently there are plans for
-*magit-key-mode* to expand to include this more general functionality.  That said,
-it works very well for me, so if *popup-keys* seems useful to you, feel free
-to use it.
+This package is not maintained for public distribution.  The *magit-key-mode* 
+has become a standalone package called *magit-popup*, which is more or less 
+equivalent to this package  That said, it works very well for me, so if
+*popup-keys* seems useful to you, feel free to use it.
 
 *popup-keys* is a user interface package based on the extremely useful
 *magit-key-mode* in the [[https://github.com/magit/magit][Magit]] package.  It is an /interactive keymap/ supporting
